@@ -1,0 +1,105 @@
+const fs = require('fs');
+const path = require('path');
+let uniqid = require("uniqid")
+const db = require("../db/db.json")
+
+const router = require("express").Router;
+
+app.get('/', (req, res) => 
+    res.sendFile(path.join(__dirname, '/public/notes.html'))
+    );
+
+//8
+app.get('/api', (req, res) => {
+    console.info(`${req.method} request received for notes`);
+    readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+  });
+
+//------------------------
+
+app.post('/api', (req, res) => {
+    console.info(`${req.method} request received to add note`);
+  
+    const { title, text, id } = req.body;
+  
+    if (req.body) {
+      const newNote = {
+        title: req.body.title,
+        text: req.body.text,
+        id: uniqid()
+      };
+  
+      readAndAppend(newNote, './db/db.json');
+      res.json(`Tip added successfully 🚀`);
+    } else {
+      res.error('Error in adding tip');
+    }
+  });
+  
+  // GET Route for retrieving all the feedback
+  app.get('/api', (req, res) => {
+    console.info(`${req.method} request received for notes`);
+  
+    readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+  });
+  
+  // POST Route for submitting feedback
+  app.post('/api', (req, res) => {
+    console.info(`${req.method} request received to submit notes`);
+  
+    
+    const { title, text, id } = req.body;
+  
+    
+    if (title && text && id) {
+      const newFeedback = {
+        title: req.body.title,
+        text: req.body.text,
+        id: uniqid()   
+      };
+  
+      readAndAppend(newFeedback, './db/db.json');
+        const response = {
+            status: 'success',
+            body: newNote,
+      };
+  
+      res.json(response);
+    } else {
+      res.json('Error in posting note');
+    }
+  });
+
+
+
+module.exports = router;
+//-------------------------------------------------
+// router.get('/notes', (req, res) => {
+//   res.json(db)
+// });
+// router.get('/notes', (req, res) => {
+
+// }
+//   //res.sendFile(path.join(__dirname, '../public/notes.html'))
+// );
+
+
+
+
+
+// module.exports = function (app) {
+//     app.get("./routes/routes.js", (req, res) => {
+//         console.log("notes request!");
+
+//         let data = fs.readFileSync("./Develop/db/db.json", "utf8");
+//         res.json(JSON.parse(data));
+//     });
+
+//     app.post("./routes/routes.js/:id", (req, res) => {
+//         const newNote = {
+//             title: req.body.title,
+//             text: req.body.text,
+//             id: uniqid(),
+//         }
+//     });
+// }
